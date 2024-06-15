@@ -12,7 +12,7 @@ class Pet extends Model
     protected $primaryKey = 'petId';
 
     protected $fillable = [
-        'petImage', 'name', 'breed', 'gender', 'age', 'description', 'diagnosis', 'vaccineStatus', 'adoptionStatus'
+        'petImage', 'name', 'breed', 'gender', 'age', 'description', 'diagnosis', 'vaccineStatus','vaccine_date', 'adoptionStatus'
     ];
 
     public function applications()

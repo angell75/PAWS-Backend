@@ -18,10 +18,11 @@ return new class extends Migration
             $table->string('name');
             $table->string('breed');
             $table->string('gender');
-            $table->integer('age');
+            $table->string('age');
             $table->text('description')->nullable();
             $table->text('diagnosis')->nullable();
             $table->string('vaccineStatus');
+            $table->date('vaccine_date')->nullable();
             $table->enum('adoptionStatus', ['available', 'adopted', 'pending'])->default('available');
             $table->timestamps();
 
