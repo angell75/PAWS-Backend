@@ -22,7 +22,7 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->text('diagnosis')->nullable();
             $table->string('vaccineStatus');
-            $table->date('vaccine_date')->nullable();
+            $table->date('vaccineDate')->nullable();
             $table->enum('adoptionStatus', ['available', 'adopted', 'pending'])->default('available');
             $table->timestamps();
 

@@ -23,5 +23,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::post('/register', [RegisterController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
-Route::post('/pets', [PetController::class, 'store']);
 
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/pets', [PetController::class, 'getPetList']);
+    Route::post('/pets', [PetController::class, 'store']);
+});
