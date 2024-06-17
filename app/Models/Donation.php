@@ -12,7 +12,11 @@ class Donation extends Model
     protected $primaryKey = 'donationId';
 
     protected $fillable = [
-        'userId', 'amount', 'donationDate'
+        'userId',
+        'amount',
+        'donationDate',
+        'created_at',
+        'updated_at',
     ];
 
     public function user()

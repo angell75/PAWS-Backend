@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PetController;
+use App\Http\Controllers\DonationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -27,4 +28,6 @@ Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanc
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/pets', [PetController::class, 'getPetList']);
     Route::post('/pets', [PetController::class, 'store']);
+    Route::get('/top-pets', [PetController::class, 'topPets']);
+    Route::post('/donations', [DonationController::class, 'store'])->middleware('auth:sanctum');
 });

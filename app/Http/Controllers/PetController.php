@@ -59,4 +59,10 @@ class PetController extends Controller
         $pets = Pet::all();
         return response()->json($pets);
     }
+
+    public function topPets()
+    {
+        $pets = Pet::orderBy('created_at', 'desc')->take(3)->get();
+        return response()->json($pets, 200);
+    }
 }
