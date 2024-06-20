@@ -65,4 +65,14 @@ class PetController extends Controller
         $pets = Pet::orderBy('created_at', 'desc')->take(3)->get();
         return response()->json($pets, 200);
     }
+    
+    public function getPetById($id)
+    {
+        $pet = Pet::find($id);
+        if (!$pet) {
+            return response()->json(['message' => 'Pet not found'], 404);
+        }
+        return response()->json($pet);
+    }
+    
 }
