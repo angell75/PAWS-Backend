@@ -75,4 +75,68 @@ class PetController extends Controller
         return response()->json($pet);
     }
     
+    //Update Pet Function
+    public function update(Request $request, $id)
+    {
+        $validator = Validator::make($request->all(), [
+            'petImage' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'name' => 'sometimes|required|string|max:255',
+            'breed' => 'sometimes|required|string|max:255',
+            'gender' => 'sometimes|required|string|max:6',
+            'age' => 'sometimes|required|string|max:255',
+            'description' => 'sometimes|required|string|max:1000',
+            'vaccineStatus' => 'sometimes|required|string',
+            'vaccineDate' => 'nullable|date',
+        ]);
+    
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+    
+        $pet = Pet::find($id);
+        if (!$pet) {
+            return response()->json(['message' => 'Pet not found'], 404);
+        }
+    
+        if ($request->hasFile('petImage')) {
+            // Delete the old image if it exists
+            if ($pet->petImage) {
+                Storage::disk('s3')->delete($pet->petImage);
+            }
+    
+            // Upload the new image
+            $imagePath = $request->file('petImage')->store('petImage', 's3');
+    
+            Storage::url($imagePath);
+    
+            $pet->petImage = 'http://localhost:9000/paws/'.$imagePath;
+        }
+    
+        if ($request->has('name')) $pet->name = $request->name;
+        if ($request->has('breed')) $pet->breed = $request->breed;
+        if ($request->has('gender')) $pet->gender = $request->gender;
+        if ($request->has('age')) $pet->age = $request->age;
+        if ($request->has('description')) $pet->description = $request->description;
+        if ($request->has('vaccineStatus')) $pet->vaccineStatus = $request->vaccineStatus;
+        if ($request->has('vaccineDate')) $pet->vaccineDate = $request->vaccineDate;
+        $pet->userId = auth()->id();
+        $pet->save();
+    
+        return response()->json(['message' => 'Pet updated successfully', 'pet' => $pet], 200);
+    }
+    public function deletePet($id)
+{
+    $pet = Pet::find($id);
+    if (!$pet) {
+        return response()->json(['message' => 'Pet not found'], 404);
+    }
+
+    if ($pet->petImage) {
+        Storage::disk('s3')->delete($pet->petImage);
+    }
+
+    $pet->delete();
+    return response()->json(['message' => 'Pet deleted successfully'], 200);
+}
+
 }

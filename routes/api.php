@@ -30,14 +30,28 @@ Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanc
 Route::get('/top-pets', [PetController::class, 'topPets']);
 
 Route::middleware(['auth:sanctum', 'auth.user'])->group(function () {
+    //Route for Pet
     Route::get('/pets', [PetController::class, 'getPetList']);
     Route::post('/pets', [PetController::class, 'store']);
-    Route::post('/donations', [DonationController::class, 'store']);
-    Route::post('/enquiries', [EnquiryController::class, 'store']);
     Route::get('/pets/{id}', [PetController::class, 'getPetById']);
-    Route::get('/users/{id}', [AuthController::class, 'getUserById']);
-    Route::post('/applications', [AdoptionApplicationController::class, 'store']);
+    Route::post('/pets/{id}', [PetController::class, 'update']);
+    Route::delete('/pets/{id}', [PetController::class, 'deletePet']);
+
+    //Route for User
     Route::get('/profile', [UserController::class, 'getProfile']);
     Route::post('/updateProfile', [UserController::class, 'updateProfile']);
     Route::post('/changePassword', [UserController::class, 'changePassword']);
+
+    //Route for Auth
+    Route::get('/users/{id}', [AuthController::class, 'getUserById']);
+
+    //Route for Donation
+    Route::post('/donations', [DonationController::class, 'store']);
+
+    //Route for Enquiries
+    Route::post('/enquiries', [EnquiryController::class, 'store']);
+
+    //Route for Application
+    Route::post('/applications', [AdoptionApplicationController::class, 'store']);
+
 });
