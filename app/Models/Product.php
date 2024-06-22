@@ -12,7 +12,7 @@ class Product extends Model
     protected $primaryKey = 'productId';
 
     protected $fillable = [
-        'sellerId', 'name', 'category', 'description', 'price', 'quantity'
+        'sellerId', 'name', 'category', 'description', 'price', 'quantity', 'image'
     ];
 
     public function user()
@@ -30,4 +30,5 @@ class Product extends Model
         return $this->hasMany(Cart::class, 'productId', 'productId');
     }
 }
+
 

@@ -9,6 +9,7 @@ use App\Http\Controllers\DonationController;
 use App\Http\Controllers\EnquiryController;
 use App\Http\Controllers\AdoptionApplicationController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\ProductController;
 
 /*
 |--------------------------------------------------------------------------
@@ -53,5 +54,13 @@ Route::middleware(['auth:sanctum', 'auth.user'])->group(function () {
 
     //Route for Application
     Route::post('/applications', [AdoptionApplicationController::class, 'store']);
-
+    Route::get('applications/{userId}', [AdoptionApplicationController::class, 'fetchMyApplications']);
+    Route::post('/applications/{applicationId}/approve', [AdoptionApplicationController::class, 'approve']);
+    Route::post('/applications/{applicationId}/confirm', [AdoptionApplicationController::class, 'confirm']);
+    
+    //Route for Product
+    Route::get('/products', [ProductController::class, 'index']);
+    Route::post('/products', [ProductController::class, 'store']);
+    Route::post('/products/{id}', [ProductController::class, 'update']);
+    Route::delete('/products/{id}', [ProductController::class, 'destroy']);;
 });
