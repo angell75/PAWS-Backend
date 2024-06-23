@@ -10,6 +10,7 @@ use App\Http\Controllers\EnquiryController;
 use App\Http\Controllers\AdoptionApplicationController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\CartController;
 
 /*
 |--------------------------------------------------------------------------
@@ -63,4 +64,7 @@ Route::middleware(['auth:sanctum', 'auth.user'])->group(function () {
     Route::post('/products', [ProductController::class, 'store']);
     Route::post('/products/{id}', [ProductController::class, 'update']);
     Route::delete('/products/{id}', [ProductController::class, 'destroy']);;
+
+    //Route for Cart
+    Route::post('/cart', [CartController::class, 'addToCart']);
 });
