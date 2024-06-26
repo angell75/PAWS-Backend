@@ -12,7 +12,8 @@ class Order extends Model
     protected $primaryKey = 'orderId';
 
     protected $fillable = [
-        'userId', 'productId', 'quantity', 'orderDate', 'price', 'status'
+        'userId', 'productId', 'quantity', 'orderDate', 'price', 'status',
+        'name', 'contact', 'address', 'card_name', 'card_number', 'card_expiry', 'card_cvc'
     ];
 
     public function user()
@@ -25,4 +26,5 @@ class Order extends Model
         return $this->belongsTo(Product::class, 'productId', 'productId');
     }
 }
+
 

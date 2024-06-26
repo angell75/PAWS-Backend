@@ -10,15 +10,9 @@ use Illuminate\Support\Facades\Log;
 
 class ProductController extends Controller
 {
-    public function index()
+    public function getAllProduct()
     {
-        $user = auth()->user();
-
-        if ($user->userRole !== 'seller') {
-            return response()->json(['error' => 'Unauthorized'], 403);
-        }
-
-        $products = Product::where('sellerId', $user->userId)->get();
+        $products = Product::all();
         return response()->json($products);
     }
 

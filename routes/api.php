@@ -11,6 +11,8 @@ use App\Http\Controllers\AdoptionApplicationController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\OrderController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -60,11 +62,17 @@ Route::middleware(['auth:sanctum', 'auth.user'])->group(function () {
     Route::post('/applications/{applicationId}/confirm', [AdoptionApplicationController::class, 'confirm']);
     
     //Route for Product
-    Route::get('/products', [ProductController::class, 'index']);
+    Route::get('/products', [ProductController::class, 'getAllProduct']);
     Route::post('/products', [ProductController::class, 'store']);
     Route::post('/products/{id}', [ProductController::class, 'update']);
     Route::delete('/products/{id}', [ProductController::class, 'destroy']);;
 
     //Route for Cart
     Route::post('/cart', [CartController::class, 'addToCart']);
+    Route::get('/cart/{userId}', [CartController::class, 'getCartItems']);
+    Route::put('/cart/{cartId}', [CartController::class, 'updateCartItem']);
+    Route::delete('/cart/{cartId}', [CartController::class, 'removeFromCart']);
+
+    //Route for Order
+    Route::post('/orders', [OrderController::class, 'createOrder']);
 });
