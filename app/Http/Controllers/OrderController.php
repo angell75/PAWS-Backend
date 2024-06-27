@@ -37,4 +37,13 @@ class OrderController extends Controller
 
         return response()->json($order, 201);
     }
+
+    /**
+     * Get orders by user ID.
+     */
+    public function getOrdersByUser($userId)
+    {
+        $orders = Order::where('userId', $userId)->with('product')->get();
+        return response()->json($orders);
+    }
 }

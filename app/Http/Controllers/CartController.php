@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Cart;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\DB; // Import the DB facade
+use Illuminate\Support\Facades\DB;
 
 class CartController extends Controller
 {
@@ -79,8 +79,7 @@ class CartController extends Controller
         return response()->json($detailedCartItems, 200);
     }
 
-
-        /**
+    /**
      * Update cart item quantity.
      */
     public function updateCartItem(Request $request, $cartId)
