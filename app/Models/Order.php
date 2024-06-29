@@ -12,8 +12,7 @@ class Order extends Model
     protected $primaryKey = 'orderId';
 
     protected $fillable = [
-        'userId', 'productId', 'quantity', 'orderDate', 'price', 'status',
-        'name', 'contact', 'address', 'card_name', 'card_number', 'card_expiry', 'card_cvc'
+        'userId', 'orderDate', 'status', 'name', 'contact', 'address', 'card_name', 'card_number', 'card_expiry', 'card_cvc'
     ];
 
     public function user()
@@ -21,10 +20,10 @@ class Order extends Model
         return $this->belongsTo(User::class, 'userId', 'userId');
     }
 
-    public function product()
+    public function products()
     {
-        return $this->belongsTo(Product::class, 'productId', 'productId');
+        return $this->belongsToMany(Product::class, 'order_products', 'orderId', 'productId')
+                    ->withPivot('quantity', 'price')
+                    ->withTimestamps();
     }
 }
-
-

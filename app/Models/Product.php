@@ -15,14 +15,11 @@ class Product extends Model
         'sellerId', 'name', 'category', 'description', 'price', 'quantity', 'image'
     ];
 
-    public function user()
-    {
-        return $this->belongsTo(User::class, 'sellerId', 'userId');
-    }
-
     public function orders()
     {
-        return $this->hasMany(Order::class, 'productId', 'productId');
+        return $this->belongsToMany(Order::class, 'order_products', 'productId', 'orderId')
+                    ->withPivot('quantity', 'price')
+                    ->withTimestamps();
     }
 
     public function carts()
@@ -30,5 +27,3 @@ class Product extends Model
         return $this->hasMany(Cart::class, 'productId', 'productId');
     }
 }
-
-

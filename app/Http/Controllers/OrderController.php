@@ -8,17 +8,15 @@ use Illuminate\Support\Facades\Validator;
 
 class OrderController extends Controller
 {
-    /**
-     * Create a new order.
-     */
     public function createOrder(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'userId' => 'required|integer',
-            'productId' => 'required|integer',
-            'quantity' => 'required|integer|min:1',
+            'products' => 'required|array',
+            'products.*.productId' => 'required|integer|exists:products,productId',
+            'products.*.quantity' => 'required|integer|min:1',
+            'products.*.price' => 'required|numeric',
             'orderDate' => 'required|date',
-            'price' => 'required|numeric',
             'status' => 'required|string',
             'name' => 'required|string',
             'contact' => 'required|string',
@@ -33,17 +31,22 @@ class OrderController extends Controller
             return response()->json(['errors' => $validator->errors()], 422);
         }
 
-        $order = Order::create($request->all());
+        $orderData = $request->except('products');
+        $order = Order::create($orderData);
 
-        return response()->json($order, 201);
+        foreach ($request->products as $product) {
+            $order->products()->attach($product['productId'], [
+                'quantity' => $product['quantity'],
+                'price' => $product['price'],
+            ]);
+        }
+
+        return response()->json($order->load('products'), 201);
     }
 
-    /**
-     * Get orders by user ID.
-     */
     public function getOrdersByUser($userId)
     {
-        $orders = Order::where('userId', $userId)->with('product')->get();
+        $orders = Order::where('userId', $userId)->with('products')->get();
         return response()->json($orders);
     }
 }
