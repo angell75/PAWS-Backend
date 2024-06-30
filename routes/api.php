@@ -62,10 +62,11 @@ Route::middleware(['auth:sanctum', 'auth.user'])->group(function () {
     Route::post('/applications/{applicationId}/confirm', [AdoptionApplicationController::class, 'confirm']);
     
     //Route for Product
-    Route::get('/products', [ProductController::class, 'getAllProduct']);
     Route::post('/products', [ProductController::class, 'store']);
     Route::post('/products/{id}', [ProductController::class, 'update']);
     Route::delete('/products/{id}', [ProductController::class, 'destroy']);;
+    Route::get('/product-summary', [ProductController::class, 'getProductSummary']);
+    Route::get('/products', [ProductController::class, 'getAllProduct']);
 
     //Route for Cart
     Route::post('/cart', [CartController::class, 'addToCart']);
@@ -76,4 +77,7 @@ Route::middleware(['auth:sanctum', 'auth.user'])->group(function () {
     //Route for Order
     Route::post('/orders', [OrderController::class, 'createOrder']);
     Route::get('/orders/user/{userId}', [OrderController::class, 'getOrdersByUser']);
+    Route::get('/orders', [OrderController::class, 'getAllOrders']); 
+    Route::put('/orders/update-status/{orderId}', [OrderController::class, 'updateOrderStatus']);
+    Route::get('/summary', [OrderController::class, 'getSummaryData']);
 });

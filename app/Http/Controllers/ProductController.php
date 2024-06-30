@@ -2,19 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Log;
+use App\Models\Order;
+use App\Models\User;
+use App\Models\Product;
+use Illuminate\Support\Facades\DB;
 
 class ProductController extends Controller
 {
-    public function getAllProduct()
-    {
-        $products = Product::all();
-        return response()->json($products);
-    }
 
     /**
      * Store a newly created product in storage.
@@ -115,4 +113,37 @@ class ProductController extends Controller
 
         return response()->json(null, 204);
     }
+
+    public function getProductSummary()
+    {
+        $totalProducts = Product::count();
+        $totalCustomers = User::where('userRole', 'customer')->count();
+        $totalOrders = Order::count();
+
+        $orderStatusCounts = Order::select(DB::raw('count(*) as count, status'))
+            ->groupBy('status')
+            ->pluck('count', 'status');
+
+        $productCategoryCounts = Product::select(DB::raw('count(*) as count, category'))
+            ->groupBy('category')
+            ->pluck('count', 'category');
+
+        return response()->json([
+            'totalProducts' => $totalProducts,
+            'totalCustomers' => $totalCustomers,
+            'totalOrders' => $totalOrders,
+            'orderStatusCounts' => $orderStatusCounts,
+            'productCategoryCounts' => $productCategoryCounts,
+        ]);
+    }
+
+        /**
+     * Retrieve all products.
+     */
+    public function getAllProduct()
+    {
+        $products = Product::all();
+        return response()->json($products);
+    }
+
 }
