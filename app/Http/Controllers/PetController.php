@@ -20,6 +20,7 @@ class PetController extends Controller
             'description' => 'required|string|max:1000',
             'vaccineStatus' => 'required|string',
             'vaccineDate' => 'nullable|date',
+            'adoptionStatus' => 'sometimes|required|string|in:available,adopted,pending,vet'
         ]);
 
         if ($validator->fails()) {
@@ -50,6 +51,7 @@ class PetController extends Controller
         $pet->vaccineStatus = $request->vaccineStatus;
         $pet->vaccineDate = $request->vaccineDate;
         $pet->userId = auth()->id();
+        $pet->adoptionStatus = $request->input('adoptionStatus', 'available'); // Use the default value if not provided
         $pet->save();
 
         return response()->json(['message' => 'Pet uploaded successfully', 'pet' => $pet], 201);
@@ -125,18 +127,24 @@ class PetController extends Controller
         return response()->json(['message' => 'Pet updated successfully', 'pet' => $pet], 200);
     }
     public function deletePet($id)
-{
-    $pet = Pet::find($id);
-    if (!$pet) {
-        return response()->json(['message' => 'Pet not found'], 404);
+    {
+        $pet = Pet::find($id);
+        if (!$pet) {
+            return response()->json(['message' => 'Pet not found'], 404);
+        }
+
+        if ($pet->petImage) {
+            Storage::disk('s3')->delete($pet->petImage);
+        }
+
+        $pet->delete();
+        return response()->json(['message' => 'Pet deleted successfully'], 200);
     }
 
-    if ($pet->petImage) {
-        Storage::disk('s3')->delete($pet->petImage);
+    public function getUserPets($userId)
+    {
+        $pets = Pet::where('userId', $userId)->get();
+        return response()->json($pets);
     }
-
-    $pet->delete();
-    return response()->json(['message' => 'Pet deleted successfully'], 200);
-}
 
 }

@@ -8,6 +8,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class OrderController extends Controller
 {
@@ -65,8 +66,9 @@ class OrderController extends Controller
         }
     }
 
-    public function getOrdersByUser($userId)
+    public function getOrdersByUser()
     {
+        $userId = Auth::id(); 
         $orders = Order::where('userId', $userId)->with('products')->get();
         return response()->json($orders);
     }
@@ -119,10 +121,11 @@ class OrderController extends Controller
         ]);
     }
 
-    public function getAllOrders() {
+    public function getAllOrders()
+    {
         $orders = Order::with('products')->get();
         return response()->json($orders);
-    }    
+    }  
 
     public function updateOrderStatus(Request $request, $orderId)
     {
@@ -138,6 +141,8 @@ class OrderController extends Controller
         $order->status = $request->status;
         $order->save();
     
-        return response()->json(['message' => 'Order status updated successfully!'], 200);
+        return response()->json(['message' => 'Order status updated successfully!', 'order' => $order], 200);
     }
+    
 }
+

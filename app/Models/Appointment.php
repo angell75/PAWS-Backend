@@ -24,4 +24,9 @@ class Appointment extends Model
     {
         return $this->belongsTo(Pet::class, 'petId', 'petId');
     }
+
+    public function vet()
+    {
+        return $this->belongsTo(User::class, 'vetId');
+    }
 }

@@ -12,6 +12,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\AppointmentController;
 
 
 /*
@@ -40,6 +41,7 @@ Route::middleware(['auth:sanctum', 'auth.user'])->group(function () {
     Route::get('/pets/{id}', [PetController::class, 'getPetById']);
     Route::post('/pets/{id}', [PetController::class, 'update']);
     Route::delete('/pets/{id}', [PetController::class, 'deletePet']);
+    Route::get('/pets/user/{userId}', [PetController::class, 'getUserPets']);
 
     //Route for User
     Route::get('/profile', [UserController::class, 'getProfile']);
@@ -80,4 +82,10 @@ Route::middleware(['auth:sanctum', 'auth.user'])->group(function () {
     Route::get('/orders', [OrderController::class, 'getAllOrders']); 
     Route::put('/orders/update-status/{orderId}', [OrderController::class, 'updateOrderStatus']);
     Route::get('/summary', [OrderController::class, 'getSummaryData']);
+
+    //Route for Appointment
+    Route::get('/appointments/user/{userId}', [AppointmentController::class, 'getUserAppointments']);
+    Route::post('/appointments', [AppointmentController::class, 'createAppointment']);
+    Route::post('/appointments/{appointmentId}/cancel', [AppointmentController::class, 'cancelAppointment']);
+
 });
