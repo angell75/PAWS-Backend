@@ -89,6 +89,7 @@ class PetController extends Controller
             'description' => 'sometimes|required|string|max:1000',
             'vaccineStatus' => 'sometimes|required|string',
             'vaccineDate' => 'nullable|date',
+            'adoptionStatus' => 'sometimes|required|string|in:available,adopted,pending,vet' // Add this line
         ]);
     
         if ($validator->fails()) {
@@ -111,7 +112,7 @@ class PetController extends Controller
     
             Storage::url($imagePath);
     
-            $pet->petImage = 'http://localhost:9000/paws/'.$imagePath;
+            $pet->petImage = 'http://localhost:9000/paws/' . $imagePath;
         }
     
         if ($request->has('name')) $pet->name = $request->name;
@@ -121,11 +122,13 @@ class PetController extends Controller
         if ($request->has('description')) $pet->description = $request->description;
         if ($request->has('vaccineStatus')) $pet->vaccineStatus = $request->vaccineStatus;
         if ($request->has('vaccineDate')) $pet->vaccineDate = $request->vaccineDate;
-        $pet->userId = auth()->id();
+        if ($request->has('adoptionStatus')) $pet->adoptionStatus = $request->adoptionStatus; // Add this line
         $pet->save();
     
         return response()->json(['message' => 'Pet updated successfully', 'pet' => $pet], 200);
     }
+    
+
     public function deletePet($id)
     {
         $pet = Pet::find($id);
@@ -147,4 +150,13 @@ class PetController extends Controller
         return response()->json($pets);
     }
 
+    public function getPetListWithOwners()
+    {
+        $pets = Pet::with(['owner' => function ($query) {
+            $query->select('userId', 'name', 'email', 'contact');
+        }])->get();
+    
+        return response()->json($pets);
+    }
+    
 }

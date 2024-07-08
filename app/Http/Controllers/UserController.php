@@ -46,4 +46,23 @@ class UserController extends Controller
             return response()->json(['message' => 'Current password is incorrect'], 400);
         }
     }
+
+    public function getAllUsers()
+    {
+        $users = User::all();
+        return response()->json($users);
+    }
+
+    public function deleteUser($id)
+    {
+        $user = User::find($id);
+
+        if (!$user) {
+            return response()->json(['error' => 'User not found.'], 404);
+        }
+
+        $user->delete();
+
+        return response()->json(['message' => 'User deleted successfully']);
+    }
 }

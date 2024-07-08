@@ -13,7 +13,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\AppointmentController;
-
+use App\Http\Controllers\AdminController;
 
 /*
 |--------------------------------------------------------------------------
@@ -42,11 +42,14 @@ Route::middleware(['auth:sanctum', 'auth.user'])->group(function () {
     Route::post('/pets/{id}', [PetController::class, 'update']);
     Route::delete('/pets/{id}', [PetController::class, 'deletePet']);
     Route::get('/pets/user/{userId}', [PetController::class, 'getUserPets']);
+    Route::get('/pets-with-owners', [PetController::class, 'getPetListWithOwners']);
 
     //Route for User
+    Route::get('/users', [UserController::class, 'getAllUsers']);
     Route::get('/profile', [UserController::class, 'getProfile']);
     Route::post('/updateProfile', [UserController::class, 'updateProfile']);
     Route::post('/changePassword', [UserController::class, 'changePassword']);
+    Route::delete('/users/{id}', [UserController::class, 'deleteUser']);
 
     //Route for Auth
     Route::get('/users/{id}', [AuthController::class, 'getUserById']);
@@ -62,7 +65,7 @@ Route::middleware(['auth:sanctum', 'auth.user'])->group(function () {
     Route::get('applications/{userId}', [AdoptionApplicationController::class, 'fetchMyApplications']);
     Route::post('/applications/{applicationId}/approve', [AdoptionApplicationController::class, 'approve']);
     Route::post('/applications/{applicationId}/confirm', [AdoptionApplicationController::class, 'confirm']);
-    
+        
     //Route for Product
     Route::post('/products', [ProductController::class, 'store']);
     Route::post('/products/{id}', [ProductController::class, 'update']);
@@ -87,5 +90,11 @@ Route::middleware(['auth:sanctum', 'auth.user'])->group(function () {
     Route::get('/appointments/user/{userId}', [AppointmentController::class, 'getUserAppointments']);
     Route::post('/appointments', [AppointmentController::class, 'createAppointment']);
     Route::post('/appointments/{appointmentId}/cancel', [AppointmentController::class, 'cancelAppointment']);
+    Route::get('/appointments/vet/{vetId}', [AppointmentController::class, 'getAppointmentsByVet']);
+    Route::get('/appointments/pet/{petId}', [AppointmentController::class, 'getAppointmentsByPet']);
+    Route::post('/appointments/pets/{petId}/appointments/{appointmentId}', [AppointmentController::class, 'updatePetAndAppointment']);
+
+    //Route for Admin
+    Route::get('/admin/dashboard', [AdminController::class, 'getDashboardData']);
 
 });

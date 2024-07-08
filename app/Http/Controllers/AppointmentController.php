@@ -86,5 +86,69 @@ class AppointmentController extends Controller
         return response()->json(['message' => 'Appointment cancelled successfully']);
     }
     
+    public function getAppointmentsByVet($vetId)
+    {
+        try {
+            $appointments = Appointment::where('vetId', $vetId)
+                ->with(['pet', 'vet:userId,name'])
+                ->get();
+
+            return response()->json($appointments);
+        } catch (\Exception $e) {
+            Log::error('Failed to fetch appointments: ' . $e->getMessage());
+            return response()->json(['error' => 'Failed to fetch appointments'], 500);
+        }
+    }
+
+    public function getAppointmentsByPet($petId)
+    {
+        try {
+            $appointments = Appointment::where('petId', $petId)
+                ->with(['pet', 'vet:userId,name'])
+                ->get();
+
+            return response()->json($appointments);
+        } catch (\Exception $e) {
+            Log::error('Failed to fetch appointments by pet: ' . $e->getMessage());
+            return response()->json(['error' => 'Failed to fetch appointments'], 500);
+        }
+    }
+
+    public function updatePetAndAppointment(Request $request, $petId, $appointmentId)
+    {
+        $validator = Validator::make($request->all(), [
+            'prognosis' => 'required|string',
+            'vaccineStatus' => 'sometimes|boolean',
+            'vaccineDate' => 'sometimes|nullable|date',
+        ]);
     
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->errors()], 400);
+        }
+    
+        try {
+            $pet = Pet::findOrFail($petId);
+            $appointment = Appointment::findOrFail($appointmentId);
+    
+            // Update only the necessary fields
+            $pet->diagnosis = $request->prognosis;
+            if ($request->has('vaccineStatus')) {
+                $pet->vaccineStatus = $request->vaccineStatus;
+                if ($request->vaccineStatus && $request->has('vaccineDate')) {
+                    $pet->vaccineDate = $request->vaccineDate;
+                }
+            }
+            $pet->save();
+    
+            $appointment->prognosis = $request->prognosis;
+            $appointment->status = 'completed';
+            $appointment->save();
+    
+            return response()->json(['message' => 'Pet and appointment updated successfully']);
+        } catch (\Exception $e) {
+            Log::error('Failed to update pet and appointment: ' . $e->getMessage());
+            return response()->json(['error' => 'Failed to update pet and appointment'], 500);
+        }
+    }
+
 }
