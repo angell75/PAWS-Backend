@@ -24,5 +24,11 @@ class DonationController extends Controller
     
         return response()->json($donation, 201);
     }
+
+    public function getAllDonations()
+    {
+        $donations = Donation::all();
+        return response()->json($donations);
+    }
     
 }

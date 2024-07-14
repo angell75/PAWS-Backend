@@ -14,6 +14,7 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\BlogController;
 
 /*
 |--------------------------------------------------------------------------
@@ -50,21 +51,28 @@ Route::middleware(['auth:sanctum', 'auth.user'])->group(function () {
     Route::post('/updateProfile', [UserController::class, 'updateProfile']);
     Route::post('/changePassword', [UserController::class, 'changePassword']);
     Route::delete('/users/{id}', [UserController::class, 'deleteUser']);
+    Route::get('/users/{userId}', [UserController::class, 'getUserById']);
 
     //Route for Auth
     Route::get('/users/{id}', [AuthController::class, 'getUserById']);
 
     //Route for Donation
     Route::post('/donations', [DonationController::class, 'store']);
+    Route::get('/donations', [DonationController::class, 'getAllDonations']);
 
     //Route for Enquiries
     Route::post('/enquiries', [EnquiryController::class, 'store']);
+    Route::get('/enquiries', [EnquiryController::class, 'index']);
+    Route::get('/enquiries/{id}', [EnquiryController::class, 'show']);
+    Route::put('enquiries/{id}/update-status', [EnquiryController::class, 'updateStatus']);
 
     //Route for Application
     Route::post('/applications', [AdoptionApplicationController::class, 'store']);
     Route::get('applications/{userId}', [AdoptionApplicationController::class, 'fetchMyApplications']);
     Route::post('/applications/{applicationId}/approve', [AdoptionApplicationController::class, 'approve']);
     Route::post('/applications/{applicationId}/confirm', [AdoptionApplicationController::class, 'confirm']);
+    Route::get('/applications', [AdoptionApplicationController::class, 'getAllApplications']);
+
         
     //Route for Product
     Route::post('/products', [ProductController::class, 'store']);
@@ -96,5 +104,14 @@ Route::middleware(['auth:sanctum', 'auth.user'])->group(function () {
 
     //Route for Admin
     Route::get('/admin/dashboard', [AdminController::class, 'getDashboardData']);
+    Route::post('/users', [AdminController::class, 'createUser']);
+    Route::put('/users/{id}', [AdminController::class, 'updateUser']);
+    Route::delete('/users/{id}', [AdminController::class, 'deleteUser']);
 
+    //Route for Blog
+    Route::get('/blogs', [BlogController::class, 'index']);
+    Route::get('/blogs/{id}', [BlogController::class, 'show']);
+    Route::post('/blogs', [BlogController::class, 'store']);
+    Route::put('/blogs/{id}', [BlogController::class, 'update']);
+    Route::delete('/blogs/{id}', [BlogController::class, 'destroy']);
 });

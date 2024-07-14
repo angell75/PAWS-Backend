@@ -12,7 +12,7 @@ class Blog extends Model
     protected $primaryKey = 'blogId';
 
     protected $fillable = [
-        'shelterId', 'title', 'subject', 'description', 'date'
+        'shelterId', 'title', 'subject', 'description', 'date', 'image'
     ];
 
     public function user()

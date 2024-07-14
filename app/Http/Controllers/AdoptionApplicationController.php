@@ -55,4 +55,10 @@ class AdoptionApplicationController extends Controller
     
         return response()->json($application, 200);
     }
+
+    public function getAllApplications()
+    {
+        $applications = Application::with('pet')->get();
+        return response()->json($applications);
+    }
 }
