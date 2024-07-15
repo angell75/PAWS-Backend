@@ -122,7 +122,7 @@ class PetController extends Controller
         if ($request->has('description')) $pet->description = $request->description;
         if ($request->has('vaccineStatus')) $pet->vaccineStatus = $request->vaccineStatus;
         if ($request->has('vaccineDate')) $pet->vaccineDate = $request->vaccineDate;
-        if ($request->has('adoptionStatus')) $pet->adoptionStatus = $request->adoptionStatus; // Add this line
+        if ($request->has('adoptionStatus')) $pet->adoptionStatus = $request->adoptionStatus; 
         $pet->save();
     
         return response()->json(['message' => 'Pet updated successfully', 'pet' => $pet], 200);

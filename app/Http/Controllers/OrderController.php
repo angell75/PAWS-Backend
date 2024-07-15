@@ -68,7 +68,7 @@ class OrderController extends Controller
 
     public function getOrdersByUser()
     {
-        $userId = Auth::id(); 
+        $userId = Auth::id();
         $orders = Order::where('userId', $userId)->with('products')->get();
         return response()->json($orders);
     }
@@ -76,7 +76,7 @@ class OrderController extends Controller
     public function getSummaryData()
     {
         $totalProducts = Product::count();
-        $totalCustomers = User::where('userRole', 'customer')->count();
+        $totalCustomers = $this->getTotalCustomers();
         $totalOrders = Order::count();
     
         $orderStatusCounts = [
@@ -121,6 +121,11 @@ class OrderController extends Controller
         ]);
     }
 
+    private function getTotalCustomers()
+    {
+        return Order::distinct('userId')->count('userId');
+    }
+
     public function getAllOrders()
     {
         $orders = Order::with('products')->get();
@@ -143,6 +148,5 @@ class OrderController extends Controller
     
         return response()->json(['message' => 'Order status updated successfully!', 'order' => $order], 200);
     }
-    
 }
 
